@@ -41,3 +41,5 @@ A # C # #
 D # B # #
 C # A # #
 ```
+
+In the folder *Examples* there are some examples of automaton descriptions.
