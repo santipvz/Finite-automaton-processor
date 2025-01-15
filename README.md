@@ -16,7 +16,7 @@ Entry: 1 --> New state: ['D']
 Entry: 1 --> New state: ['A']
 A --> ACCEPTED
 
-Press ANY KEY to exit
+Press ENTER to exit
 ```
 
 ## File format
