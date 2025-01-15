@@ -1,7 +1,7 @@
 q00 q05 q10 q15 q20 q25 q30 q35 qaa qbb qcc qdd
 q00 qaa qbb qcc qdd
 5 1 2 a b c d 
---TABLA DE TRANSICIONES--
+--TRANSITION TABLE--
 q05 # q10 # q20 # q00 # q00 # q00 # q00 #  # 
 q10 # q15 # q25 # q00 qaa # q05 # q05 # q00 qdd #  # 
 q15 # q20 # q30 # q05 qaa # q00 qbb # q10 # q00 qdd #  # 
