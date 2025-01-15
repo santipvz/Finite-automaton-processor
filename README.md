@@ -42,6 +42,6 @@ D # B # #
 C # A # #
 ```
 
-In the folder *Examples* there are some examples of automaton descriptions.
+In the folder *Examples* there are some examples of automaton descriptions: 1 deterministic and 1 non-deterministic.
 
 For deterministic automatons leave blank the empty transaction column.
