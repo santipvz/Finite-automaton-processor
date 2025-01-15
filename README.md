@@ -1,5 +1,5 @@
 # Finite-automaton-processor
-Processor of finite automaton, both ***deterministic*** and ***non-deterministic***
+Processor of finite automaton, both ***deterministic*** and ***non-deterministic*** in python.
 
 Python program of less than 100 lines to which you pass as arguments a file with the description of the automaton and the string to process.
 
