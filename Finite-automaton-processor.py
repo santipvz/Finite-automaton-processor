@@ -1,87 +1,58 @@
 import sys
 
 def main():
+    if len(sys.argv) != 3:
+        print("Error: Incorrect number of arguments. Usage: script.py <file> <string>")
+        sys.exit(1)
 
-	if(len(sys.argv) != 3):
-		print("Number of argmunets incorrect")
-		return
+    try:
+        with open(sys.argv[1], 'r') as file:
+            lines = file.readlines()
+    except FileNotFoundError:
+        print("Error: Could not open the input file.")
+        sys.exit(1)
 
-	# Load
-	with open(sys.argv[1], 'r') as file:
-		lines = file.readlines()
+    # Read states, final states, alphabet and transitions
+    states, final_state, alphabet = [line.strip().split() for line in lines[:3]]
+    alphabet.append('λ')  # Add lambda to the alphabet
 
-		states = []  # First state == initial state
-		final_state = []
-		alphabet = []
-		transitions = {}
+    # Initialize transitions dictionary
+    transitions = {}
+    for state in states:
+        transitions[state] = {symbol: [] for symbol in alphabet}
 
-		# Process first 3 lines
-		for i in range(3):
-			for word in lines[i].strip().split(" "):
-				if i == 0:
-					states.append(word)
-				elif i == 1:
-					final_state.append(word)
-				elif i == 2:
-					alphabet.append(word)
+    for state_index, line in enumerate(lines[4:]):
+        next_states = line.split("#")
+        for index, symbol in enumerate(alphabet):
+            transitions[states[state_index]][symbol] = next_states[index].split()
 
-		# Empty
-		alphabet.append('λ')
- 
-		# Process transitions
-		for state_index, line in enumerate(lines[4:]):
-			transitions[states[state_index]] = {}  # New hashmap for current state
-			next_states = line.split("#")
-			for index, alphabet_entry in enumerate(alphabet): # For each entry save his next states
-				transitions[states[state_index]][alphabet_entry] = next_states[index].strip(' ').split(' ')
+    #### CALCULATE LAMBDA CLOSURE ####
+    initial_state = set()
+    stack = [states[0]]  # Use a stack to avoid re-calculation
 
+    while stack:
+        state = stack.pop()
+        if state not in initial_state:
+            initial_state.add(state)
+            stack.extend(transitions[state]["λ"])
 
-	#### MAIN FUNCTIONALITY ####
-	initial_state = []
-	future_states = []
-	
-	# Calculate empty clausure
-	next_states = [states[0], ]
-	while(next_states):
-		for state in next_states:
-			if(state not in initial_state):
-				future_states.extend(transitions[state]["λ"])
-				initial_state.append(state) # Add state to clausure
-		
-		while("" in future_states):
-			future_states.remove("")
+    next_states = list(initial_state)
+    print(f"Initial state: {next_states}")
 
-		next_states = list(set(future_states))
-		future_states = []
+    #### PROCESS EACH CHARACTER OF THE INPUT ####
+    for character in sys.argv[2]:
+        print(f"Input: {character} --> ", end="")
+        next_states = {new_state for state in next_states for new_state in transitions[state][character] + transitions[state]["λ"] if new_state}
+        print(f"New state: {list(next_states)}")
 
+    #### CHECK FINAL STATE ####
+    if any(state in final_state for state in next_states):
+        print(f"{state} --> ACCEPTED")
+    else:
+        print(f"{state} --> REJECTED")
 
-	next_states = initial_state
+    input("\nPress ENTER to exit")
+    
 
-	print(f"Initial state: {next_states}")
-
-	# Process each entry
-	for character in sys.argv[2]:
-		print("Entry: " + character, end=" --> ")
-		for state in next_states:
-			future_states.extend(transitions[state][character])
-			future_states.extend(transitions[state]["λ"])
-
-		while("" in future_states):
-			future_states.remove("")
-
-		next_states = list(set(future_states)) # Remove duplicates
-		future_states = []
-		print(f"New state: {next_states}")
-
-	for state in next_states:
-		if state in final_state:
-			print(f"{state} --> ACCEPTED")
-		else:
-			print(f"{state} --> REJECTED")
-
-	print("\nPress ENTER to exit")
-	input()
-
-
-if __name__=="__main__":
-	main()
+if __name__ == "__main__":
+    main()
